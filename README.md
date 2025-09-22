@@ -1,4 +1,5 @@
 # Package for control manipulator with Joystick(xbox)
+### 아직 수정중! -박정우 25/09/22
 
 ## 1. Need joystick package
 
@@ -25,6 +26,5 @@ axes, button의 토픽이 잘 나오는지 확인
 ## 3. Controlling Joint
     ros2 run my_controller_pkg direct_arm_control.py
 
-아직 수정중! -박정우 25/09/22
 
 
