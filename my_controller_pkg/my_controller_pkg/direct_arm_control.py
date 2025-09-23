@@ -89,7 +89,7 @@ class FullController(Node):
 
             # 오른쪽 스틱 입력 처리
             if abs(msg.axes[self.axis_map['joint1']]) > deadzone:
-                deltas[0] = -arm_speed * msg.axes[self.axis_map['joint1']]
+                deltas[0] = arm_speed * msg.axes[self.axis_map['joint1']]
             if abs(msg.axes[self.axis_map['joint2']]) > deadzone:
                 deltas[1] = arm_speed * msg.axes[self.axis_map['joint2']]
 
