@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'xbox_controller = my_controller_pkg.xbox_full_control:main',
-            'direct_arm_control = my_controller_pkg.direct_arm_control:main',
+            'direct_controller = my_controller_pkg.direct_arm_control:main',
         ],
     },
 )
