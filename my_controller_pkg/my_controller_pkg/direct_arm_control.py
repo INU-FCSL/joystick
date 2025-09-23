@@ -45,9 +45,12 @@ class FullController(Node):
             'joint4': 7,        # D-pad 상/하
         }
         self.button_map = {
+            'joint3_increase': 3, # Y
+            'joint3_decrease': 0, # A 
             'gripper_open': 5,  # RB
             'gripper_close': 4, # LB
-            'reset_home' : 3,  # Y
+            'reset_home' : 8,  # HOME
+            'start_point' : 7 # START
         }
 
         self.get_logger().info("🚀 터틀봇 통합 제어 노드가 시작되었습니다.")
@@ -75,21 +78,29 @@ class FullController(Node):
         base_twist_msg.linear.x = max_lin_vel * msg.axes[self.axis_map['base_linear']]
         base_twist_msg.angular.z = max_ang_vel * msg.axes[self.axis_map['base_angular']]
         self.base_pub.publish(base_twist_msg)
-
+        
+        
+        # HOME 버튼과 START 버튼의 우선순위 설정
         if msg.buttons[self.button_map['reset_home']] == 1:
-            home_position = [0.0] * len(self.arm_joint_names)
+            home_position = [0.0, -1.57, 1.57, 0.0] # 예시 초기 자세
             self.send_trajectory_goal(home_position)
             self.get_logger().info("🦾 초기 자세로 복귀합니다.")
         
-        # Y 버튼이 눌리지 않았을 때만 일반 조작 실행
+        elif msg.buttons[self.button_map['start_point']] == 1:
+            start_position = [0.0, 0.5, 0.0, 0.0] # 예시 시작 자세
+            self.send_trajectory_goal(start_position)
+            self.get_logger().info("🦾 시작 자세로 이동합니다.")
+        
+        #HOME, START 버튼이 눌리지 않은 경우에만 팔과 그리퍼 제어
         else:
+
             # --- 2. 로봇 팔 제어 ---
             target_positions = list(self.current_joint_positions)
             deltas = [0.0] * len(self.arm_joint_names)
 
             # 오른쪽 스틱 입력 처리
             if abs(msg.axes[self.axis_map['joint1']]) > deadzone:
-                deltas[0] = arm_speed * msg.axes[self.axis_map['joint1']]
+                deltas[0] = -arm_speed * msg.axes[self.axis_map['joint1']]
             if abs(msg.axes[self.axis_map['joint2']]) > deadzone:
                 deltas[1] = arm_speed * msg.axes[self.axis_map['joint2']]
 
@@ -98,6 +109,11 @@ class FullController(Node):
                 deltas[2] = -arm_speed * msg.axes[self.axis_map['joint3']]
             if abs(msg.axes[self.axis_map['joint4']]) > deadzone:
                 deltas[3] = arm_speed * msg.axes[self.axis_map['joint4']]
+                # joint3 버튼 입력 처리 (Y: 증가, A: 감소)
+            if msg.buttons[self.button_map['joint3_increase']] == 1:
+                deltas[2] += arm_speed
+            if msg.buttons[self.button_map['joint3_decrease']] == 1:
+                deltas[2] -= arm_speed
 
             # 목표 위치 계산 및 전송
             position_changed = False
