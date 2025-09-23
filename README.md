@@ -1,6 +1,4 @@
 # Package for control manipulator with Joystick(xbox)
-### 아직 수정중! -박정우 25/09/22
-
 ## 1. Need joystick package
 
     #workspace에서
@@ -26,5 +24,6 @@ axes, button의 토픽이 잘 나오는지 확인
 ## 3. Controlling Joint
     ros2 run my_controller_pkg direct_controller
 
-
-
+# Patch note
+- 25/09/22(박정우) - 초안 작성!
+- 25/09/23(박정우) - direct_controller HOME, START 버튼 Way Point 추가, Joint3 증가 감소를 Y,A로 할당
