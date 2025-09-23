@@ -18,7 +18,7 @@ axes, button의 토픽이 잘 나오는지 확인
 
 ## 2. Using Moveit- 미완성
 
-    ros2 run my_controller_pkg xbox_full_control.py
+    ros2 run my_controller_pkg xbox_controller
 
 
 ## 3. Controlling Joint
