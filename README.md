@@ -27,3 +27,4 @@ axes, button의 토픽이 잘 나오는지 확인
 # Patch note
 - 25/09/22(박정우) - 초안 작성!
 - 25/09/23(박정우) - direct_controller HOME, START 버튼 Way Point 추가, Joint3 증가 감소를 Y,A로 할당
+- 25/09/24(박정우) - joint 1 조작 삭제, START의 Way Point 수정
