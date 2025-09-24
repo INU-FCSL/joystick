@@ -1,3 +1,19 @@
+# ====================
+# 편집자 : 박정우
+# 최종 수정일  : 2025-09-23
+# 작업 상태 : 수정중
+# 역할 & 발행되는 토픽 : joystick 입력을 받아 터틀봇3 베이스와 로봇팔, 그리퍼를 제어
+# 구동 방법 : ros2 run my_robot_control direct_arm_control
+# 노드명 : full_controller_node
+# 사용되는 파라미터 :
+#   max_linear_speed (float, 기본값 0.3) : 베이스 최대  선형 속도 (m/s)
+#   max_angular_speed (float, 기본값 1.5) : 베이스 최대 각속도 (rad/s)
+#   arm_joint_speed (float, 기본값 0.2) : 로봇 팔 관절 속도 (rad/s)
+#   deadzone (float, 기본값 0.1) : 조이스틱 데드존 
+# ====================
+
+
+
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -39,7 +55,6 @@ class FullController(Node):
         self.axis_map = {
             'base_linear': 1,   # 왼쪽 스틱 상/하
             'base_angular': 0,  # 왼쪽 스틱 좌/우
-            'joint1': 3,        # 오른쪽 스틱 좌/우
             'joint2': 4,        # 오른쪽 스틱 상/하
             'joint3': 6,        # D-pad 좌/우
             'joint4': 7,        # D-pad 상/하
@@ -87,7 +102,7 @@ class FullController(Node):
             self.get_logger().info("🦾 초기 자세로 복귀합니다.")
         
         elif msg.buttons[self.button_map['start_point']] == 1:
-            start_position = [0.0, 0.5, 0.0, 0.0] # 예시 시작 자세
+            start_position = [0.0, 0.5, 0.2, 0.0] # 예시 시작 자세
             self.send_trajectory_goal(start_position)
             self.get_logger().info("🦾 시작 자세로 이동합니다.")
         
@@ -99,8 +114,6 @@ class FullController(Node):
             deltas = [0.0] * len(self.arm_joint_names)
 
             # 오른쪽 스틱 입력 처리
-            if abs(msg.axes[self.axis_map['joint1']]) > deadzone:
-                deltas[0] = -arm_speed * msg.axes[self.axis_map['joint1']]
             if abs(msg.axes[self.axis_map['joint2']]) > deadzone:
                 deltas[1] = arm_speed * msg.axes[self.axis_map['joint2']]
 
